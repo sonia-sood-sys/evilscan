@@ -16,6 +16,7 @@ from rich.progress import (
     SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
+    TimeRemainingColumn,
 )
 
 import config
@@ -62,6 +63,7 @@ def detect_live_hosts(domains: list[str], threads: int, resume: bool) -> list[st
         BarColumn(),
         TextColumn("[cyan]{task.completed}/{task.total}"),
         TimeElapsedColumn(),
+        TimeRemainingColumn(),
         transient=True,
     ) as progress:
         task = progress.add_task(

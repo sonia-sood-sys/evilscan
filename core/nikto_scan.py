@@ -16,6 +16,7 @@ from rich.progress import (
     SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
+    TimeRemainingColumn,
 )
 
 import config
@@ -129,6 +130,7 @@ def run_nikto(
         BarColumn(),
         TextColumn("[cyan]{task.completed}/{task.total}"),
         TimeElapsedColumn(),
+        TimeRemainingColumn(),
         transient=True,
     ) as progress:
         task = progress.add_task("[cyan]Running nikto...", total=len(domains))

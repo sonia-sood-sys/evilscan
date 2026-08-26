@@ -18,6 +18,7 @@ from rich.progress import (
     SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
+    TimeRemainingColumn,
 )
 
 import config
@@ -42,11 +43,13 @@ def _parse_jsonl(jsonl_file: Path) -> list[dict]:
     return findings
 
 
-def _scan_single(domain: str, resume: bool) -> dict:
+def _scan_single(domain: str, resume: bool, severity: str = None) -> dict:
     """Run nuclei against a single domain."""
     fname = safe_filename(domain)
     raw_file: Path = config.NUCLEI_RAW_DIR / f"{fname}.txt"
     json_file: Path = config.NUCLEI_JSON_DIR / f"{fname}.jsonl"
+
+    nuclei_severity = severity or config.NUCLEI_SEVERITY
 
     if resume and already_scanned(json_file):
         logger.debug(
@@ -61,7 +64,7 @@ def _scan_single(domain: str, resume: bool) -> dict:
     cmd = [
         config.NUCLEI_BIN,
         "-u", domain,
-        "-severity", config.NUCLEI_SEVERITY,
+        "-severity", nuclei_severity,
         "-rl", str(config.NUCLEI_RATE_LIMIT),
         "-c", str(config.NUCLEI_CONCURRENCY),
         "-bulk-size", str(config.NUCLEI_BULK_SIZE),
@@ -108,13 +111,15 @@ def run_nuclei(
     domains: list[str],
     threads: int,
     resume: bool,
+    severity: str = None,
 ) -> dict[str, dict]:
     """
     Run nuclei against all domains in parallel.
     Returns a dict keyed by domain with findings.
     """
+    nuclei_severity = severity or config.NUCLEI_SEVERITY
     logger.info(
-        f"[cyan]Phase 3 – Nuclei [{config.NUCLEI_SEVERITY}] | "
+        f"[cyan]Phase 3 – Nuclei [{nuclei_severity}] | "
         f"{len(domains)} target(s) | {threads} thread(s)[/cyan]"
     )
 
@@ -126,13 +131,14 @@ def run_nuclei(
         BarColumn(),
         TextColumn("[cyan]{task.completed}/{task.total}"),
         TimeElapsedColumn(),
+        TimeRemainingColumn(),
         transient=True,
     ) as progress:
         task = progress.add_task("[cyan]Running nuclei...", total=len(domains))
 
         with ThreadPoolExecutor(max_workers=threads) as executor:
             futures = {
-                executor.submit(_scan_single, d, resume): d
+                executor.submit(_scan_single, d, resume, nuclei_severity): d
                 for d in domains
             }
             for future in as_completed(futures):

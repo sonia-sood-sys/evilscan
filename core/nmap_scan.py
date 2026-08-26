@@ -18,6 +18,7 @@ from rich.progress import (
     SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
+    TimeRemainingColumn,
 )
 
 import config
@@ -124,6 +125,7 @@ def run_nmap(
         BarColumn(),
         TextColumn("[cyan]{task.completed}/{task.total}"),
         TimeElapsedColumn(),
+        TimeRemainingColumn(),
         transient=True,
     ) as progress:
         task = progress.add_task("[cyan]Running nmap...", total=len(domains))

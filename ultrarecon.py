@@ -91,6 +91,47 @@ def build_parser() -> argparse.ArgumentParser:
         default=False,
         help="Resume previous scan – skip already scanned domains",
     )
+    parser.add_argument(
+        "--profile",
+        choices=["quick", "comprehensive", "stealth", "bugbounty"],
+        help="Use predefined scan profile (overrides individual flags)",
+    )
+    parser.add_argument(
+        "--subdomain-enum",
+        action="store_true",
+        default=False,
+        help="Enable subdomain enumeration using subfinder",
+    )
+    parser.add_argument(
+        "--dns-enum",
+        action="store_true",
+        default=False,
+        help="Enable DNS enumeration using dnsx",
+    )
+    parser.add_argument(
+        "--tech-detect",
+        action="store_true",
+        default=False,
+        help="Enable technology detection using wappalyzer",
+    )
+    parser.add_argument(
+        "--dir-enum",
+        action="store_true",
+        default=False,
+        help="Enable directory enumeration using ffuf",
+    )
+    parser.add_argument(
+        "--nuclei-severity",
+        type=str,
+        default=None,
+        help="Nuclei severity levels (e.g., 'critical,high', 'medium,high,critical')",
+    )
+    parser.add_argument(
+        "--wordlist",
+        type=str,
+        default=None,
+        help="Custom wordlist for directory enumeration",
+    )
 
     return parser
 
@@ -110,6 +151,17 @@ def validate_args(args: argparse.Namespace) -> None:
             "[bold red][!] --threads must be between 1 and 200.[/bold red]"
         )
         sys.exit(1)
+
+    # Validate nuclei severity
+    if args.nuclei_severity:
+        valid_severities = ["critical", "high", "medium", "low", "info"]
+        for sev in args.nuclei_severity.split(","):
+            sev = sev.strip().lower()
+            if sev not in valid_severities:
+                console.print(
+                    f"[bold red][!] Invalid severity '{sev}'. Valid: {', '.join(valid_severities)}[/bold red]"
+                )
+                sys.exit(1)
 
 
 def _confirm_authorization() -> None:
@@ -186,6 +238,13 @@ def main() -> None:
         nuclei_only=args.nuclei_only,
         nikto_only=args.nikto_only,
         resume=args.resume,
+        profile=args.profile,
+        subdomain_enum=args.subdomain_enum,
+        dns_enum=args.dns_enum,
+        tech_detect=args.tech_detect,
+        dir_enum=args.dir_enum,
+        nuclei_severity=args.nuclei_severity,
+        wordlist=args.wordlist,
     )
 
     scanner.run()
