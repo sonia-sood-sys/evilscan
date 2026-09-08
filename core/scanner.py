@@ -98,7 +98,7 @@ class Scanner:
         """Apply scan profile settings."""
         profile_config = config.SCAN_PROFILES[profile]
         console.print(
-            f"[bold cyan]Applying profile:[/bold cyan] [white]{profile}[/white] - "
+            f"[bold cyan]Applying profile:[/bold cyan] {profile} - "
             f"[yellow]{profile_config['description']}[/yellow]"
         )
 
@@ -158,7 +158,7 @@ class Scanner:
 
     def _phase_header(self, phase: str, description: str) -> None:
         console.rule(
-            f"[bold cyan]{phase}[/bold cyan] [white]{description}[/white]"
+            f"[bold cyan]{phase}[/bold cyan] {description}"
         )
 
     def run(self) -> None:
