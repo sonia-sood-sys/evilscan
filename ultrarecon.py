@@ -199,12 +199,12 @@ def main() -> None:
             "[bold cyan]╚══════════════════════════════════════════╝[/bold cyan]\n"
         )
         console.print(
-            "[bold white]Usage:[/bold white] "
+            "[bold]Usage:[/bold] "
             "[cyan]python3 ultrarecon.py -t <targets.txt> [OPTIONS][/cyan]\n"
         )
         console.print(
-            "[bold white]Enter the path to your targets file to begin "
-            "(Ctrl+C to exit):[/bold white]"
+            "[bold]Enter the path to your targets file to begin "
+            "(Ctrl+C to exit):[/bold]"
         )
         try:
             target_path = input("    Targets file > ").strip()

@@ -174,6 +174,6 @@ CVSS_ESTIMATES = {
 
 DISCLAIMER = (
     "\n[bold red][!] DISCLAIMER:[/bold red] "
-    "This tool is for [bold]authorized security testing only[/bold]. "
+    "This tool is for authorized security testing only. "
     "Unauthorized use is illegal and unethical.\n"
 )

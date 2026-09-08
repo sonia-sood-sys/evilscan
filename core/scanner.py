@@ -169,11 +169,11 @@ class Scanner:
         mode = "aggressive (-sVC)" if self.aggressive else "fast (-F -T4)"
         profile_info = f"Profile: {self.profile}" if self.profile else "Custom mode"
         console.print(
-            f"[bold white]Targets:[/bold white] [cyan]{len(self.domains)}[/cyan]  "
-            f"[bold white]Threads:[/bold white] [cyan]{self.threads}[/cyan]  "
-            f"[bold white]Mode:[/bold white] [cyan]{mode}[/cyan]  "
-            f"[bold white]Resume:[/bold white] [cyan]{self.resume}[/cyan]  "
-            f"[bold white]{profile_info}[/white]\n"
+            f"[bold]Targets:[/bold] [cyan]{len(self.domains)}[/cyan]  "
+            f"[bold]Threads:[/bold] [cyan]{self.threads}[/cyan]  "
+            f"[bold]Mode:[/bold] [cyan]{mode}[/cyan]  "
+            f"[bold]Resume:[/bold] [cyan]{self.resume}[/cyan]  "
+            f"[bold]{profile_info}[/bold]\n"
         )
 
         only_mode = self.nmap_only or self.nuclei_only or self.nikto_only
